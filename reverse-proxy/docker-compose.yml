@@ -3,40 +3,39 @@ networks:
   reverse-proxy:
     external: true
 
+volumes:
+  reverse-proxy:
+
 services:
   reverse-proxy:
-    image: gabrielheiwa/traefik-reverse-proxy:3.2.3
+    build: .
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
     ports:
       - 80:80
       - 443:443
+      - 8080:8080
     networks:
       - reverse-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
-      - ./traefik.yml:/traefik.yaml:ro
-      - ./acme.json:/acme.json
-    environment:
-      - CF_API_EMAIL=${CF_API_EMAIL}
-      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
+      - reverse-proxy:/data
+    # environment:
+    #   - CF_API_EMAIL=${CF_API_EMAIL}
+    #   - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.iwai-app.gabrielheiwa.dev`)"
-      # - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
-      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
-      - "traefik.http.routers.traefik-secure.entrypoints=https"
-      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.iwai-app.gabrielheiwa.dev`)"
-      # - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
-      - "traefik.http.routers.traefik-secure.tls=true"
-      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].main=iwaiapp.gabrielheiwa.dev"
-      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.iwaiapp.gabrielheiwa.dev"
-      - "traefik.http.routers.traefik-secure.service=api@internal"
-
-
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      # - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      # - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
+      # - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
+      # - "traefik.http.routers.traefik-secure.entrypoints=https"
+      # - "traefik.http.routers.traefik-secure.rule=Host(`traefik.iwai-app.gabrielheiwa.dev`)"
+      # - "traefik.http.routers.traefik-secure.tls=true"
+      # - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
+      # - "traefik.http.routers.traefik-secure.tls.domains[0].main=iwai-app.gabrielheiwa.dev"
+      # - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.iwai-app.gabrielheiwa.dev"
+      # - "traefik.http.routers.traefik-secure.service=api@internal"

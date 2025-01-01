@@ -8,16 +8,18 @@ import { ClothesModule } from './clothes/clothes.module';
 import { ImagesModule } from './images/images.module';
 import { Image } from './images/entities/image.entity';
 import { Clothe } from './clothes/entities/clothe.entity';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
 	imports: [
+		ConfigModule.forRoot(),
 		TypeOrmModule.forRoot({
 			type: 'postgres',
-			host: 'localhost',
-			port: 4002,
-			username: 'postgres',
-			password: 'supersecret',
-			database: 'postgres',
+			host: process.env.DB_HOST,
+			port: Number(process.env.DB_PORT),
+			username: process.env.DB_USER,
+			password: process.env.DB_PASSWORD,
+			database: process.env.DB_DATABASE,
 			entities: [User, Image, Clothe],
 			synchronize: process.env.ENV === 'production' ? false : true,
 		}),
