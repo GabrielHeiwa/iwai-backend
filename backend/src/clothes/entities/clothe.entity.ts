@@ -7,7 +7,6 @@ import {
 	Entity,
 	JoinColumn,
 	OneToOne,
-	PrimaryColumn,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
@@ -15,7 +14,7 @@ import {
 @Entity({ name: 'clothes' })
 class Clothe {
 	@PrimaryGeneratedColumn('increment')
-	id: Number;
+	id: number;
 
 	@Column({ generated: 'uuid', unique: true })
 	uuid: string;
@@ -32,16 +31,19 @@ class Clothe {
 	@Column()
 	obs: string;
 
+	@Column()
+	photo: string;
+
 	@OneToOne(() => User)
 	@JoinColumn({ name: 'user_id' })
-	userId: Number;
+	userId: number;
 
-    @OneToOne(() => Image)
-    @JoinColumn({ name: 'image_id' })
-    imageId: Number;
+	@OneToOne(() => Image)
+	@JoinColumn({ name: 'image_id' })
+	imageId: number;
 
 	@Column({ name: 'is_draft', default: true })
-	isDraft: Boolean;
+	isDraft: boolean;
 
 	@CreateDateColumn({ name: 'created_at' })
 	createdAt: Date;

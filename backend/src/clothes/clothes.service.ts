@@ -15,9 +15,19 @@ export class ClothesService {
 	) {}
 
 	async create(createClotheDto: CreateClotheDto, file: Express.Multer.File) {
-		
+		// TODO: Add at bucket name user id to create a unique folder for each user
+		const fileKey = await this.minioService.uploadFile(file, 'iwai');
+
+		const clothe = this.clotheRepository.create({
+			...createClotheDto,
+			photo: fileKey,
+		});
+
+		const savedClothe = await this.clotheRepository.save(clothe);
+
 		return {
-			data: null,
+			message: 'Clothe created successfully',
+			data: savedClothe,
 		};
 	}
 
