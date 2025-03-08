@@ -4,16 +4,21 @@ import { UpdateClotheDto } from './dto/update-clothe.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Clothe } from './entities/clothe.entity';
 import { Repository } from 'typeorm';
+import { MinioService } from 'src/minio/minio.service';
 
 @Injectable()
 export class ClothesService {
 	constructor(
 		@InjectRepository(Clothe)
 		private readonly clotheRepository: Repository<Clothe>,
+		private readonly minioService: MinioService,
 	) {}
 
-	create(createClotheDto: CreateClotheDto) {
-		return 'This action adds a new clothe';
+	async create(createClotheDto: CreateClotheDto, file: Express.Multer.File) {
+		
+		return {
+			data: null,
+		};
 	}
 
 	async findAll(page: string | number) {

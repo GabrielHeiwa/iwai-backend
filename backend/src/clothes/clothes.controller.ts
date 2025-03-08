@@ -7,18 +7,25 @@ import {
 	Param,
 	Delete,
 	Query,
+	UseInterceptors,
+	UploadedFile,
 } from '@nestjs/common';
 import { ClothesService } from './clothes.service';
 import { CreateClotheDto } from './dto/create-clothe.dto';
 import { UpdateClotheDto } from './dto/update-clothe.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('clothes')
 export class ClothesController {
 	constructor(private readonly clothesService: ClothesService) {}
 
 	@Post()
-	create(@Body() createClotheDto: CreateClotheDto) {
-		return this.clothesService.create(createClotheDto);
+	@UseInterceptors(FileInterceptor('photo'))
+	create(
+		@Body() createClotheDto: CreateClotheDto,
+		@UploadedFile() file: Express.Multer.File,
+	) {
+		return this.clothesService.create(createClotheDto, file);
 	}
 
 	@Get()

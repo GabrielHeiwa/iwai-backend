@@ -9,6 +9,7 @@ import { ImagesModule } from './images/images.module';
 import { Image } from './images/entities/image.entity';
 import { Clothe } from './clothes/entities/clothe.entity';
 import { ConfigModule } from '@nestjs/config';
+import { MinioService } from './minio/minio.service';
 
 @Module({
 	imports: [
@@ -28,6 +29,6 @@ import { ConfigModule } from '@nestjs/config';
 		ImagesModule,
 	],
 	controllers: [AppController],
-	providers: [AppService],
+	providers: [AppService, MinioService],
 })
 export class AppModule {}
