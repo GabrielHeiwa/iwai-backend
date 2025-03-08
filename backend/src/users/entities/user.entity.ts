@@ -12,7 +12,7 @@ import {
 @Entity({ name: 'users' })
 class User {
 	@PrimaryGeneratedColumn('increment')
-	id: Number;
+	id: number;
 
 	@Column({ generated: 'uuid', unique: true })
 	uuid: string;
