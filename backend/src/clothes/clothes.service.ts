@@ -31,16 +31,23 @@ export class ClothesService {
 		};
 	}
 
-	async findAll(page: string | number) {
-		page = Number(page);
+	async findAll(page: string | number | undefined) {
+		page = Number(page ?? 1);
 
 		const [clothes, total] = await this.clotheRepository.findAndCount({
 			take: 10, // TODO: After remove this hardcoded
 			skip: (page - 1) * 10,
 		});
 
+		const clothesWithImage = await Promise.all(
+			clothes.map(async (clothe) => ({
+				...clothe,
+				image: await this.minioService.getFileUrl('iwai', clothe.photo),
+			})),
+		);
+
 		return {
-			data: clothes,
+			data: clothesWithImage,
 			page,
 			total,
 		};
