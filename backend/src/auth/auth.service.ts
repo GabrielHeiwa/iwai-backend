@@ -15,9 +15,10 @@ export class AuthService {
 			throw new Error('Passwords do not match');
 		}
 
-		const [err] = await this.usersService.getUserByEmail(email);
+		const [err, userFinded] = await this.usersService.getUserByEmail(email);
 
 		if (err) return new BadRequestException(err);
+		if (userFinded) return new BadRequestException('User already exists');
 
 		const user = new User();
 		user.email = email;
@@ -31,7 +32,27 @@ export class AuthService {
 		return userCreate;
 	}
 
+	async login(loginDto: any) {
+		const { email, password } = loginDto;
+
+		const [err, user] = await this.usersService.getUserByEmail(email);
+
+		if (err) return new BadRequestException(err);
+
+		const isPasswordMatch = this.comparePassword(password, user.password);
+
+		if (!isPasswordMatch) {
+			return new BadRequestException('Invalid password');
+		}
+
+		return user;
+	}
+
 	private hashPassword(password: string) {
 		return bcrypt.hashSync(password, Number(process.env.SALT_ROUNDS));
+	}
+
+	private comparePassword(password: string, hash: string) {
+		return bcrypt.compareSync(password, hash);
 	}
 }

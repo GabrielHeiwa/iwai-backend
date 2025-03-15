@@ -10,19 +10,26 @@ export class UsersService {
 		private readonly userRepository: Repository<User>,
 	) {}
 
-	async getUserByEmail(email: string) {
-		const user = await this.userRepository.findOne({ where: { email } });
+	async getUserByEmail(
+		email: string,
+	): Promise<[undefined | any, User | undefined]> {
+		try {
+			const user = await this.userRepository.findOne({
+				where: { email },
+			});
 
-		if (user) {
+			return [undefined, user];
+		} catch (err: unknown) {
+			console.error(err);
+
 			return [
 				{
-					message: 'User already exists',
+					message: 'Error to find user',
 					status: 400,
 				},
+				undefined,
 			];
 		}
-
-		return [undefined, undefined];
 	}
 
 	async createUser(user: User) {
