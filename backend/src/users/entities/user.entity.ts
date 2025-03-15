@@ -17,8 +17,11 @@ class User {
 	@Column({ generated: 'uuid', unique: true })
 	uuid: string;
 
-	@Column({ name: 'external_id' })
-	externalId: string;
+	@Column({ unique: true })
+	email: string;
+
+	@Column()
+	password: string;
 
 	@OneToMany(() => Clothe, (clothe) => clothe.userId)
 	clothes: Clothe[];

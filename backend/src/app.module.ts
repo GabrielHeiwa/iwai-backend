@@ -10,6 +10,10 @@ import { Image } from './images/entities/image.entity';
 import { Clothe } from './clothes/entities/clothe.entity';
 import { ConfigModule } from '@nestjs/config';
 import { MinioService } from './minio/minio.service';
+import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
+import { UsersService } from './users/users.service';
 
 @Module({
 	imports: [
@@ -27,8 +31,9 @@ import { MinioService } from './minio/minio.service';
 		UsersModule,
 		ClothesModule,
 		ImagesModule,
+		AuthModule,
 	],
-	controllers: [AppController],
-	providers: [AppService, MinioService],
+	controllers: [AppController, AuthController],
+	providers: [AppService, MinioService, AuthService, UsersService],
 })
 export class AppModule {}
