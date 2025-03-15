@@ -14,10 +14,16 @@ import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
 	imports: [
 		ConfigModule.forRoot(),
+		JwtModule.register({
+			global: true,
+			secret: process.env.JWT_SECRET,
+			signOptions: { expiresIn: '1d' },
+		}),
 		TypeOrmModule.forRoot({
 			type: 'postgres',
 			host: process.env.DB_HOST,

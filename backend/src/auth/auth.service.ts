@@ -3,10 +3,14 @@ import { RegisterDto } from './dto/register.dto';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-	constructor(private readonly usersService: UsersService) {}
+	constructor(
+		private readonly usersService: UsersService,
+		private readonly jwtService: JwtService,
+	) {}
 
 	async register(registerDto: RegisterDto) {
 		const { email, password, passwordConfirm } = registerDto;
@@ -29,7 +33,11 @@ export class AuthService {
 
 		if (errCreate) return new BadRequestException(errCreate);
 
-		return userCreate;
+		const payload = { email: userCreate.email, sub: userCreate.id };
+
+		return {
+			access_token: this.jwtService.sign(payload),
+		};
 	}
 
 	async login(loginDto: any) {
@@ -45,7 +53,11 @@ export class AuthService {
 			return new BadRequestException('Invalid password');
 		}
 
-		return user;
+		const payload = { email: user.email, sub: user.id };
+
+		return {
+			access_token: this.jwtService.sign(payload),
+		};
 	}
 
 	private hashPassword(password: string) {
