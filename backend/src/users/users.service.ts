@@ -42,4 +42,15 @@ export class UsersService {
 			return [err, undefined];
 		}
 	}
+
+	async updateUser(user: User) {
+		try {
+			await this.userRepository.save(user);
+
+			return [undefined, user];
+		} catch (err) {
+			console.error(err);
+			return [err, undefined];
+		}
+	}
 }

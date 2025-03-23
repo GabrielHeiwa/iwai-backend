@@ -1,9 +1,15 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+	BadRequestException,
+	HttpException,
+	HttpStatus,
+	Injectable,
+} from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { UsersService } from 'src/users/users.service';
 import { User } from 'src/users/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -13,20 +19,28 @@ export class AuthService {
 	) {}
 
 	async register(registerDto: RegisterDto) {
-		const { email, password, passwordConfirm } = registerDto;
+		const { email, password, confirmPassword } = registerDto;
 
-		if (password !== passwordConfirm) {
-			throw new Error('Passwords do not match');
+		if (password !== confirmPassword) {
+			throw new HttpException(
+				'Passwords do not match',
+				HttpStatus.BAD_REQUEST,
+			);
 		}
 
 		const [err, userFinded] = await this.usersService.getUserByEmail(email);
 
-		if (err) return new BadRequestException(err);
-		if (userFinded) return new BadRequestException('User already exists');
+		if (err) throw new HttpException(err, HttpStatus.BAD_REQUEST);
+		if (userFinded)
+			throw new HttpException(
+				'User already exists',
+				HttpStatus.BAD_REQUEST,
+			);
 
 		const user = new User();
 		user.email = email;
 		user.password = this.hashPassword(password);
+		user.lastLogin = new Date();
 
 		const [errCreate, userCreate] =
 			await this.usersService.createUser(user);
@@ -40,7 +54,7 @@ export class AuthService {
 		};
 	}
 
-	async login(loginDto: any) {
+	async login(loginDto: LoginDto) {
 		const { email, password } = loginDto;
 
 		const [err, user] = await this.usersService.getUserByEmail(email);
@@ -55,8 +69,15 @@ export class AuthService {
 
 		const payload = { email: user.email, sub: user.id };
 
+		user.lastLogin = new Date();
+
+		await this.usersService.updateUser(user);
+
 		return {
-			access_token: this.jwtService.sign(payload),
+			message: 'Login success',
+			data: {
+				accessToken: this.jwtService.sign(payload),
+			},
 		};
 	}
 

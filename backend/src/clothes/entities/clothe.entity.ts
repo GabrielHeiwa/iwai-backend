@@ -29,7 +29,7 @@ class Clothe {
 	size: string;
 
 	@Column()
-	obs: string;
+	observations: string;
 
 	@Column()
 	photo: string;

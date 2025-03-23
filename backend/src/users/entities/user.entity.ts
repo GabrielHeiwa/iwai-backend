@@ -23,6 +23,9 @@ class User {
 	@Column()
 	password: string;
 
+	@Column({ nullable: true })
+	lastLogin: Date;
+
 	@OneToMany(() => Clothe, (clothe) => clothe.userId)
 	clothes: Clothe[];
 
