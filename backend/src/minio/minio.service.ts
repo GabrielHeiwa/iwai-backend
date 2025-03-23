@@ -7,7 +7,7 @@ export class MinioService {
 
 	constructor() {
 		this.minioClient = new Client({
-			endPoint: '192.168.15.5',
+			endPoint: '0.0.0.0',
 			port: 4000,
 			useSSL: false,
 			accessKey: 'iwai',

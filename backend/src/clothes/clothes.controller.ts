@@ -25,6 +25,8 @@ export class ClothesController {
 		@Body() createClotheDto: CreateClotheDto,
 		@UploadedFile() file: Express.Multer.File,
 	) {
+		console.log('eaiii');
+
 		return this.clothesService.create(createClotheDto, file);
 	}
 
