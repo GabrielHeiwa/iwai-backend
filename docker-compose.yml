@@ -34,21 +34,21 @@ services:
       - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
       - POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
     
-  backend:
-    build: ./backend
-    container_name: ${PROJECT}-${ENVIRONMENT}-backend
-    networks:
-      - iwai
-    environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=supersecret
-      - DB_DATABASE=postgres
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.${PROJECT}-${ENVIRONMENT}-backend.entrypoints=${ENTRYPOINTS}"
-      - "traefik.http.routers.${PROJECT}-${ENVIRONMENT}-backend.rule=Host(`backend.${DOMAIN}`)"
-      - "traefik.http.routers.${PROJECT}-${ENVIRONMENT}-backend.tls=${TLS}"
-      - "traefik.http.routers.${PROJECT}-${ENVIRONMENT}-backend.tls.certresolver=cloudflare"
-      - "traefik.http.services.${PROJECT}-${ENVIRONMENT}-backend.loadbalancer.server.port=${PORT_BACKEND}"
+  # backend:
+  #   build: ./backend
+  #   container_name: ${PROJECT}-${ENVIRONMENT}-backend
+  #   networks:
+  #     - iwai
+  #   environment:
+  #     - DB_HOST=db
+  #     - DB_PORT=5432
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=supersecret
+  #     - DB_DATABASE=postgres
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.${PROJECT}-${ENVIRONMENT}-backend.entrypoints=${ENTRYPOINTS}"
+  #     - "traefik.http.routers.${PROJECT}-${ENVIRONMENT}-backend.rule=Host(`backend.${DOMAIN}`)"
+  #     - "traefik.http.routers.${PROJECT}-${ENVIRONMENT}-backend.tls=${TLS}"
+  #     - "traefik.http.routers.${PROJECT}-${ENVIRONMENT}-backend.tls.certresolver=cloudflare"
+  #     - "traefik.http.services.${PROJECT}-${ENVIRONMENT}-backend.loadbalancer.server.port=${PORT_BACKEND}"
