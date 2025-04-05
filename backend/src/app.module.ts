@@ -13,6 +13,9 @@ import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { JwtModule } from '@nestjs/jwt';
+import { LooksModule } from './looks/looks.module';
+import { PiecesModule } from './pieces/pieces.module';
+import { PiecesModule } from './pieces/pieces.module';
 
 @Module({
 	imports: [
@@ -36,6 +39,8 @@ import { JwtModule } from '@nestjs/jwt';
 		ClothesModule,
 		ImagesModule,
 		AuthModule,
+		LooksModule,
+		PiecesModule,
 	],
 	controllers: [AuthController],
 	providers: [MinioService, AuthService, UsersService],
