@@ -11,7 +11,7 @@ export default class LookClothe {
 	uuid: string;
 
 	@OneToOne(() => Look)
-	@JoinColumn({ name: 'look_id' })
+	@JoinColumn()
 	lookId: number;
 
 	@OneToOne(() => Clothe)

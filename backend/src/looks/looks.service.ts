@@ -3,18 +3,28 @@ import { CreateLookDto } from './dto/create-look.dto';
 import { UpdateLookDto } from './dto/update-look.dto';
 import { Look } from './entities/look.entity';
 import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class LooksService {
-	constructor(private readonly looksRepository: Repository<Look>) {}
+	constructor(
+		@InjectRepository(Look)
+		private readonly looksRepository: Repository<Look>,
+	) {}
 
 	async create(createLookDto: CreateLookDto) {
 		const look = this.looksRepository.create(createLookDto);
-		return await this.looksRepository.save(look);
+		return {
+			data: await this.looksRepository.save(look),
+			message: 'Look criado com sucesso',
+		};
 	}
 
 	async findAll() {
-		return await this.looksRepository.find();
+		return {
+			data: await this.looksRepository.find(),
+			message: 'Looks encontrados com sucesso',
+		};
 	}
 
 	async findOne(id: number) {
@@ -28,11 +38,17 @@ export class LooksService {
 	async update(id: number, updateLookDto: UpdateLookDto) {
 		const look = await this.findOne(id);
 		this.looksRepository.merge(look, updateLookDto);
-		return await this.looksRepository.save(look);
+		return {
+			data: await this.looksRepository.save(look),
+			message: 'Look atualizado com sucesso',
+		};
 	}
 
 	async remove(id: number) {
 		const look = await this.findOne(id);
-		return await this.looksRepository.remove(look);
+		return {
+			data: await this.looksRepository.remove(look),
+			message: 'Look removido com sucesso',
+		};
 	}
 }

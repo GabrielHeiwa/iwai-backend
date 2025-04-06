@@ -14,8 +14,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersService } from './users/users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { LooksModule } from './looks/looks.module';
-import { PiecesModule } from './pieces/pieces.module';
-import { PiecesModule } from './pieces/pieces.module';
+import { Look } from './looks/entities/look.entity';
+import LookClothe from './looks/entities/lookClothe.entity';
 
 @Module({
 	imports: [
@@ -32,7 +32,7 @@ import { PiecesModule } from './pieces/pieces.module';
 			username: process.env.DB_USER,
 			password: process.env.DB_PASSWORD,
 			database: process.env.DB_DATABASE,
-			entities: [User, Image, Clothe],
+			entities: [User, Image, Clothe, Look, LookClothe],
 			synchronize: process.env.ENV === 'production' ? false : true,
 		}),
 		UsersModule,
@@ -40,7 +40,6 @@ import { PiecesModule } from './pieces/pieces.module';
 		ImagesModule,
 		AuthModule,
 		LooksModule,
-		PiecesModule,
 	],
 	controllers: [AuthController],
 	providers: [MinioService, AuthService, UsersService],
